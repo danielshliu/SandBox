@@ -3,7 +3,8 @@ import java.util.*;
 //HELLO MACBOOKY
 public class SandLab {
   public static void main(String[] args) {
-    SandLab lab = new SandLab(250, 200);
+    //130, (ANY)
+    SandLab lab = new SandLab(130, 180);
     lab.run();
   }
 
@@ -15,10 +16,10 @@ public class SandLab {
   public static final int SNOW = 4;
   public static final int ICE = 5;
   public static final int FIRE = 6;
-  public static final int METAL_LIQUID = 7;
-
-
+  public static final int LAVA = 7;
   public static final int SMOKE = 8;
+
+  public static final int COBBLE = 102;
   public static final int GLASS = 101;
 
 
@@ -37,7 +38,7 @@ public class SandLab {
     names[SNOW] = "Snow";
     names[ICE] = "Ice";
     names[FIRE] = "Fire";
-    names[METAL_LIQUID] = "Metal Liquid";
+    names[LAVA] = "Metal Liquid";
     names[SMOKE] = "Smoke";
 
     display = new SandDisplay("Falling Sand", numRows, numCols, names);
@@ -99,7 +100,7 @@ public class SandLab {
             display.setColor(i,j,new Color(204, 229, 255));
             break;
 
-          case METAL_LIQUID:
+          case LAVA:
             int Metal_Liquid_rand=rand.nextInt(50);
             if(Metal_Liquid_rand==0){
               display.setColor(i,j, new Color(255,93,23));
@@ -222,7 +223,7 @@ public class SandLab {
               } else if (grid[clampY(y + y1)][clampX(x + x1)] == SAND) { // SAND TO GLASS
                 grid[clampY(y + y1)][clampX(x + x1)] = GLASS;
               } else if (grid[clampY(y + y1)][clampX(x + x1)] == METAL) { // METAL TO METAL LIQUID
-                grid[clampY(y + y1)][clampX(x + x1)] = METAL_LIQUID;
+                grid[clampY(y + y1)][clampX(x + x1)] = LAVA;
               } else if (grid[clampY(y + y1)][clampX(x + x1)] == ICE) { // ICE TO WATER
                 grid[clampY(y + y1)][clampX(x + x1)] = WATER;
               }else if(rand_Smoke==0) {
@@ -239,18 +240,18 @@ public class SandLab {
 
         break;
 
-      case METAL_LIQUID:
+      case LAVA:
         if(y<grid.length){
-          if(grid[y+1][x]!=METAL && grid[y+1][x]!=METAL_LIQUID){
-            grid[y+1][x]=METAL_LIQUID;
+          if(grid[y+1][x]!=METAL && grid[y+1][x]!=LAVA){
+            grid[y+1][x]=LAVA;
             grid[y][x]=EMPTY;
           }else{
             int num = rand.nextInt(2);
             if ((num == 0 && (x) < grid[0].length - 1) && grid[y][x + 1] == EMPTY) {
-              grid[y][x + 1] = METAL_LIQUID;
+              grid[y][x + 1] = LAVA;
               grid[y][x] = EMPTY;
             } else if (x != 0 && grid[y][x - 1] == EMPTY) {
-              grid[y][x - 1] = METAL_LIQUID;
+              grid[y][x - 1] = LAVA;
               grid[y][x] = EMPTY;
             }
           }
