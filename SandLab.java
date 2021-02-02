@@ -3,8 +3,9 @@ import java.util.*;
 //HELLO MACBOOKY
 public class SandLab {
   public static void main(String[] args) {
-    //130, (ANY)
-    SandLab lab = new SandLab(130, 180);
+    //130, (ANY) MACBOOK
+    //250, 200 (Windows)
+    SandLab lab = new SandLab(250, 200);
     lab.run();
   }
 
@@ -19,8 +20,11 @@ public class SandLab {
   public static final int LAVA = 7;
   public static final int SMOKE = 8;
 
-  public static final int COBBLE = 102;
+
+
   public static final int GLASS = 101;
+  public static final int COBBLE = 102;
+  public static final int OBSIDIAN = 103;
 
 
   //do not add any more fields
@@ -30,7 +34,7 @@ public class SandLab {
   public SandLab(int numRows, int numCols) {
     grid = new int [numRows][numCols];
     String[] names;
-    names = new String[10];
+    names = new String[9];
     names[EMPTY] = "Empty";
     names[METAL] = "Metal";
     names[SAND] = "Sand";
@@ -38,7 +42,7 @@ public class SandLab {
     names[SNOW] = "Snow";
     names[ICE] = "Ice";
     names[FIRE] = "Fire";
-    names[LAVA] = "Metal Liquid";
+    names[LAVA] = "Lava";
     names[SMOKE] = "Smoke";
 
     display = new SandDisplay("Falling Sand", numRows, numCols, names);
@@ -110,16 +114,24 @@ public class SandLab {
             break;
 
           case SMOKE:
-              int Smoke_rand = rand.nextInt(10);
-              if(Smoke_rand==0){
-                display.setColor(i,j,new Color(125,125,125));
-              }else{
-                display.setColor(i,j,new Color(255,255,255));
-              }
+            int Smoke_rand = rand.nextInt(10);
+            if(Smoke_rand==0){
+              display.setColor(i,j,new Color(125,125,125));
+            }else{
+              display.setColor(i,j,new Color(255,255,255));
+            }
             break;
 
+          case COBBLE:
+              display.setColor(i,j,new Color(120,120,120));
+            break;
+            
+          case OBSIDIAN:
+            display.setColor(i,j,new Color(75,0,130));
+            break;
+            
         }
-
+        
 
 
 
@@ -160,9 +172,12 @@ public class SandLab {
 
       case WATER:
         if (y < grid.length) {
-          if (grid[y + 1][x] == ICE) {
+          if (grid[y + 1][x] == LAVA) {
+            grid[y][x] = OBSIDIAN;
+          }else if(grid[y+1][x]==ICE) {
             grid[y][x] = ICE;
-          } else if (grid[y+1][x] != METAL && grid[y + 1][x] != SAND && grid[y + 1][x] != WATER) {
+          } else if (grid[y+1][x] != METAL && grid[y + 1][x] != SAND &&
+                  grid[y + 1][x] != WATER && grid[y+1][x]!=OBSIDIAN && grid[y+1][x]!= COBBLE ) {
             grid[y + 1][x] = WATER;
             grid[y][x] = EMPTY;
           } else {
@@ -186,9 +201,7 @@ public class SandLab {
             grid[y][x] = EMPTY;
           } else if (grid[y + 1][x] == WATER) {
             grid[y][x] = WATER;
-          }
-          //if other then poof!
-          else {
+          } else {
             if (grid[y + 1][x] != ICE || grid[y + 1][x] != SNOW) {
               int melt = rand.nextInt(20000);
               if (melt == 0) {
@@ -242,9 +255,12 @@ public class SandLab {
 
       case LAVA:
         if(y<grid.length){
-          if(grid[y+1][x]!=METAL && grid[y+1][x]!=LAVA){
-            grid[y+1][x]=LAVA;
-            grid[y][x]=EMPTY;
+          if(grid[y+1][x]==WATER){
+            grid[y][x]=COBBLE;
+          }else if(grid[y+1][x]!=METAL && grid[y+1][x]!=LAVA &&
+                  grid[y+1][x]!=COBBLE && grid[y+1][x]!=OBSIDIAN) {
+            grid[y + 1][x] = LAVA;
+            grid[y][x] = EMPTY;
           }else{
             int num = rand.nextInt(2);
             if ((num == 0 && (x) < grid[0].length - 1) && grid[y][x + 1] == EMPTY) {
