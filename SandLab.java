@@ -5,7 +5,7 @@ public class SandLab {
   public static void main(String[] args) {
     //130, (ANY) MACBOOK
     //250, 200 (Windows)
-    SandLab lab = new SandLab(250, 200);
+    SandLab lab = new SandLab(130, 200);
     lab.run();
   }
 
@@ -199,7 +199,7 @@ public class SandLab {
           if (grid[y + 1][x] == EMPTY) {
             grid[y + 1][x] = SNOW;
             grid[y][x] = EMPTY;
-          } else if (grid[y + 1][x] == WATER) {
+          } else if (grid[y + 1][x] == WATER || grid[y+1][x]==LAVA) {
             grid[y][x] = WATER;
           } else {
             if (grid[y + 1][x] != ICE || grid[y + 1][x] != SNOW) {
@@ -271,13 +271,16 @@ public class SandLab {
               grid[y][x] = EMPTY;
             }
           }
-        }
+            //fire particles up ward 
+        };
         break;
 
       case SMOKE:
         if(y>0){
           if(grid[y-1][x]==EMPTY){
             grid[y-1][x]=SMOKE;
+            grid[y][x]=EMPTY;
+          }else if(grid[y-1][x]!=EMPTY){
             grid[y][x]=EMPTY;
           }
           if(grid[y][x]==(y=0)){
