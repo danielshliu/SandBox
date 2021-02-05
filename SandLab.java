@@ -31,8 +31,8 @@ public class SandLab {
   private int[][] grid;
   private SandDisplay display;
 
-  private static final int LIGHTNING_CHANCE=500;
-  private static int GAME_TIME=5;
+  private static final int LIGHTNING_CHANCE=1500;
+  private static int GAME_TIME=1500;
 
 
 
@@ -137,7 +137,12 @@ public class SandLab {
             break;
 
           case LIGHTNING:
-            display.setColor(i,j,new Color(70,50,220));
+            int lightning_colour = rand.nextInt(2);
+            if(lightning_colour==0){
+              display.setColor(i,j,new Color(70,50,220));
+            }else{
+              display.setColor(i,j,new Color(255,255,0));
+            }
             break;
           case LIGHTNING_ROOT:
             display.setColor(i,j,new Color(150,150,150));
