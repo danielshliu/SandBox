@@ -5,7 +5,7 @@ public class SandLab {
   public static void main(String[] args) {
     //130, (ANY) MACBOOK
     //250, 200 (Windows)
-    SandLab lab = new SandLab(130, 200);
+    SandLab lab = new SandLab(250, 200);
     lab.run();
   }
 
@@ -19,9 +19,9 @@ public class SandLab {
   public static final int FIRE = 6;
   public static final int LAVA = 7;
   public static final int SMOKE = 8;
-  public static final int LIGHTNING = 9;
+  public static final int LIGHTNING_ROOT= 9;
 
-
+  public static final int LIGHTNING=104;
   public static final int GLASS = 101;
   public static final int COBBLE = 102;
   public static final int OBSIDIAN = 103;
@@ -30,6 +30,11 @@ public class SandLab {
   //do not add any more fields
   private int[][] grid;
   private SandDisplay display;
+
+  private static final int LIGHTNING_CHANCE=1500;
+  private static int GAME_TIME=1500;
+
+
 
   public SandLab(int numRows, int numCols) {
     grid = new int [numRows][numCols];
@@ -44,7 +49,7 @@ public class SandLab {
     names[FIRE] = "Fire";
     names[LAVA] = "Lava";
     names[SMOKE] = "Smoke";
-    names[LIGHTNING] = "Lightning";
+    names[LIGHTNING_ROOT]="Lightning";
 
     display = new SandDisplay("Falling Sand", numRows, numCols, names);
   }
@@ -124,15 +129,22 @@ public class SandLab {
             break;
 
           case COBBLE:
-              display.setColor(i,j,new Color(120,120,120));
+            display.setColor(i,j,new Color(120,120,120));
             break;
-            
+
           case OBSIDIAN:
             display.setColor(i,j,new Color(75,0,130));
             break;
-            
+
+          case LIGHTNING:
+            display.setColor(i,j,new Color(70,50,220));
+            break;
+          case LIGHTNING_ROOT:
+            display.setColor(i,j,new Color(150,150,150));
+            break;
+
         }
-        
+
 
 
 
@@ -146,6 +158,7 @@ public class SandLab {
     Random rand = new Random();
     int y = rand.nextInt(grid.length-1);
     int x = rand.nextInt(grid[0].length);
+    GAME_TIME++;
 
     switch(grid[y][x]) {
 
@@ -178,7 +191,8 @@ public class SandLab {
           }else if(grid[y+1][x]==ICE) {
             grid[y][x] = ICE;
           } else if (grid[y+1][x] != METAL && grid[y + 1][x] != SAND &&
-                  grid[y + 1][x] != WATER && grid[y+1][x]!=OBSIDIAN && grid[y+1][x]!= COBBLE ) {
+                  grid[y + 1][x] != WATER && grid[y+1][x]!=OBSIDIAN && grid[y+1][x]!= COBBLE &&
+                  grid[y+1][x]!=GLASS) {
             grid[y + 1][x] = WATER;
             grid[y][x] = EMPTY;
           } else {
@@ -200,7 +214,7 @@ public class SandLab {
           if (grid[y + 1][x] == EMPTY) {
             grid[y + 1][x] = SNOW;
             grid[y][x] = EMPTY;
-          } else if (grid[y + 1][x] == WATER || grid[y+1][x]==LAVA) {
+          } else if (grid[y + 1][x] == WATER) {
             grid[y][x] = WATER;
           } else {
             if (grid[y + 1][x] != ICE || grid[y + 1][x] != SNOW) {
@@ -237,7 +251,7 @@ public class SandLab {
               } else if (grid[clampY(y + y1)][clampX(x + x1)] == SAND) { // SAND TO GLASS
                 grid[clampY(y + y1)][clampX(x + x1)] = GLASS;
               } else if (grid[clampY(y + y1)][clampX(x + x1)] == METAL) { // METAL TO METAL LIQUID
-                grid[clampY(y + y1)][clampX(x + x1)] = LAVA;
+                grid[clampY(y + y1)][clampX(x + x1)] = LAVA; //ISSSUE
               } else if (grid[clampY(y + y1)][clampX(x + x1)] == ICE) { // ICE TO WATER
                 grid[clampY(y + y1)][clampX(x + x1)] = WATER;
               }else if(rand_Smoke==0) {
@@ -272,8 +286,22 @@ public class SandLab {
               grid[y][x] = EMPTY;
             }
           }
-            //fire particles up ward 
-        };
+          final int LAVA_MELT_RANGE=10;
+          int metal_melt=rand.nextInt(500);
+          for(int y1=-LAVA_MELT_RANGE;y1<=LAVA_MELT_RANGE;y1++){
+            for(int x1=-LAVA_MELT_RANGE;x1<=LAVA_MELT_RANGE;x1++) {
+              if (x1 * x1 + y1 * y1 <= LAVA_MELT_RANGE * LAVA_MELT_RANGE) {
+              } else if (grid[clampY(y + y1)][clampX(x + x1)] == SNOW) { // SNOW TO WATER
+                grid[clampY(y + y1)][clampX(x + x1)] = WATER;
+              } else if (grid[clampY(y + y1)][clampX(x + x1)] == SAND) { // SAND TO GLASS
+                grid[clampY(y + y1)][clampX(x + x1)] = GLASS;
+              } else if (grid[clampY(y + y1)][clampX(x + x1)] == ICE) { // ICE TO WATER
+                grid[clampY(y + y1)][clampX(x + x1)] = WATER;
+              }
+            }
+          }
+
+        }
         break;
 
       case SMOKE:
@@ -291,8 +319,31 @@ public class SandLab {
 
         break;
 
+      case LIGHTNING_ROOT:
+        if(GAME_TIME%LIGHTNING_CHANCE==0){
+          final int LIGHTNING_WIDTH = 6;
+          for(int y1=y;y1<grid.length;y1++){
+            int zig = y1%(LIGHTNING_WIDTH*2-2);
+            int x1 = (zig > (LIGHTNING_WIDTH-1)) ?  LIGHTNING_WIDTH-1 - zig % (LIGHTNING_WIDTH-1) : zig;
+            if(clampX(x+x1) == x+x1){
+              System.out.println(GAME_TIME);
+              grid[y1][x+x1] = LIGHTNING;
+            }
+          }
+
+        }else{
+          grid[y][x]=EMPTY;
+        }
+
+      case LIGHTNING:
+        int disappear = rand.nextInt(10);
+        if(disappear==0) grid[y][x] = EMPTY;
+
+      break;
+
     }
   }
+
 
   private int clampX(int val){
     return(Math.max(0,Math.min(grid[0].length-1,val)));
