@@ -31,8 +31,8 @@ public class SandLab {
   private int[][] grid;
   private SandDisplay display;
 
-  private static final int LIGHTNING_CHANCE=1500;
-  private static int GAME_TIME=1500;
+  private static final int LIGHTNING_CHANCE=500;
+  private static int GAME_TIME=5;
 
 
 
