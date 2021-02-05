@@ -19,7 +19,7 @@ public class SandLab {
   public static final int FIRE = 6;
   public static final int LAVA = 7;
   public static final int SMOKE = 8;
-
+  public static final int LIGHTNING = 9;
 
 
   public static final int GLASS = 101;
@@ -34,7 +34,7 @@ public class SandLab {
   public SandLab(int numRows, int numCols) {
     grid = new int [numRows][numCols];
     String[] names;
-    names = new String[9];
+    names = new String[10];
     names[EMPTY] = "Empty";
     names[METAL] = "Metal";
     names[SAND] = "Sand";
@@ -44,6 +44,7 @@ public class SandLab {
     names[FIRE] = "Fire";
     names[LAVA] = "Lava";
     names[SMOKE] = "Smoke";
+    names[LIGHTNING] = "Lightning";
 
     display = new SandDisplay("Falling Sand", numRows, numCols, names);
   }
