@@ -169,9 +169,10 @@ public class SandLab {
 
       case SAND:
         if (y < grid.length) {
-          if (grid[y + 1][x] == EMPTY) {
-            grid[y + 1][x] = SAND;
-            grid[y][x] = EMPTY;
+          if (grid[y+1][x] == EMPTY || grid[y+1][x]==WATER) {
+            int temp = grid[y+1][x];
+            grid[y + 1][x] = grid[y][x];
+            grid[y][x] = temp;
           } else {
             int ran = rand.nextInt(2);
             if ((x) < grid[0].length - 1 && grid[y + 1][x] != METAL) {
@@ -325,26 +326,34 @@ public class SandLab {
         break;
 
       case LIGHTNING_ROOT:
+
         if(GAME_TIME%LIGHTNING_CHANCE==0){
           final int LIGHTNING_WIDTH = 6;
+
           for(int y1=y;y1<grid.length;y1++){
             int zig = y1%(LIGHTNING_WIDTH*2-2);
             int x1 = (zig > (LIGHTNING_WIDTH-1)) ?  LIGHTNING_WIDTH-1 - zig % (LIGHTNING_WIDTH-1) : zig;
             if(clampX(x+x1) == x+x1){
-              System.out.println(GAME_TIME);
               grid[y1][x+x1] = LIGHTNING;
             }
           }
+
 
         }else{
           grid[y][x]=EMPTY;
         }
 
+
+
       case LIGHTNING:
+        if(grid[y+1][x]!=EMPTY) {
+          grid[y + 1][x] = FIRE;
+        }
         int disappear = rand.nextInt(10);
         if(disappear==0) grid[y][x] = EMPTY;
 
-      break;
+
+        break;
 
     }
   }
