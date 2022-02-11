@@ -20,6 +20,7 @@ public class SandLab {
   public static final int LAVA = 7;
   public static final int SMOKE = 8;
   public static final int LIGHTNING_ROOT= 9;
+  
 
   public static final int LIGHTNING=104;
   public static final int GLASS = 101;
@@ -366,6 +367,9 @@ public class SandLab {
   private int clampY(int val){
     return(Math.max(0,Math.min(grid.length-1,val)));
   }
+
+
+
   //do not modify
   public void run() {
     while (true) {
