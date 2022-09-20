@@ -5,7 +5,7 @@ public class SandLab {
   public static void main(String[] args) {
     //130, (ANY) MACBOOK
     //250, 200 (Windows)
-    SandLab lab = new SandLab(250, 200);
+    SandLab lab = new SandLab(130, 200);
     lab.run();
   }
 
